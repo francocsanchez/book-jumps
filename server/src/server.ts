@@ -20,7 +20,13 @@ app.use(express.json());
 
 // Routes
 import usuarioRoutes from "./routes/usuarioRoutes";
+import clubRoutes from "./routes/clubRoutes";
+import licenciaRoutes from "./routes/licenciaRoutes";
+import marcaAvionRoutes from "./routes/marcaAvionRoutes";
 
 app.use("/api/usuarios", usuarioRoutes);
+app.use("/api/clubs", clubRoutes);
+app.use("/api/licencias", licenciaRoutes);
+app.use("/api/marcas-aviones", marcaAvionRoutes);
 
 export default app;
