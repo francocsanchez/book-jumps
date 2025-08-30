@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import Club from "../models/Club";
+import { Types } from "mongoose";
 
 export class ClubController {
   static getAll = async (req: Request, res: Response) => {
     try {
       const clubs = await Club.find({});
+
       res.status(201).json({
         data: clubs,
       });
@@ -26,7 +28,6 @@ export class ClubController {
       }
 
       const club = new Club({ nombre, direccion, imagen });
-
       await club.save();
 
       res.status(201).json({ message: "Club creado exitosamente" });
@@ -37,15 +38,8 @@ export class ClubController {
   };
 
   static getByID = async (req: Request, res: Response) => {
-    const { clubID } = req.params;
     try {
-      const club = await Club.findById(clubID);
-
-      if (!club) {
-        const error = new Error(`Club con ID ${clubID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-      res.status(201).json({ data: club });
+      res.status(201).json({ data: req.club });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al listar club" });
@@ -53,17 +47,8 @@ export class ClubController {
   };
 
   static updateByID = async (req: Request, res: Response) => {
-    const { clubID } = req.params;
-
     try {
-      const club = await Club.findById(clubID);
-
-      if (!club) {
-        const error = new Error(`Club con ID ${clubID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-
-      await Club.findByIdAndUpdate(clubID, req.body, { new: true });
+      await Club.findByIdAndUpdate(req.club._id, req.body, { new: true });
 
       res.status(200).json({ message: "Club actualizado correctamente" });
     } catch (error) {
@@ -73,22 +58,36 @@ export class ClubController {
   };
 
   static deleteByID = async (req: Request, res: Response) => {
-    const { clubID } = req.params;
     try {
-      const club = await Club.findById(clubID);
+      req.club.activo = !req.club.activo;
+      await req.club.save();
 
-      if (!club) {
-        const error = new Error(`Club con ID ${clubID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-
-      club.activo = !club.activo;
-      await club.save();
-
-      res.status(201).json({ message: `Club ${club.nombre} ${club.activo ? "habilitado" : "deshabilitado"} exitosamente` });
+      res.status(201).json({ message: `Club ${req.club.nombre} ${req.club.activo ? "habilitado" : "deshabilitado"} exitosamente` });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al cambiar de estado" });
+    }
+  };
+
+  static addAeronaveToClub = async (req: Request, res: Response) => {
+    try {
+      await Club.findByIdAndUpdate(req.club._id, { $addToSet: { aeronaves: req.aeronave._id } }, { new: true });
+
+      res.status(201).json({ message: "Aeronave agregada exitosamente" });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al agregar una aeronave al club" });
+    }
+  };
+
+  static removeAeronaveToClub = async (req: Request, res: Response) => {
+    try {
+      await Club.findByIdAndUpdate(req.club._id, { $pull: { aeronaves: req.aeronave._id } }, { new: true });
+
+      res.status(201).json({ message: "Aeronave eliminada exitosamente" });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al eliminar una aeronave al club" });
     }
   };
 }

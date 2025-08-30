@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import MarcaAvion from "../models/MarcaAvion";
 import ModeloAvion from "../models/ModeloAvion";
 
 export class ModeloAvionController {
@@ -17,18 +16,9 @@ export class ModeloAvionController {
 
   static create = async (req: Request, res: Response) => {
     const { nombre } = req.body;
-    const { marcaAvionID } = req.params;
 
     try {
-      const marcaAvionExistente = await MarcaAvion.findById(marcaAvionID);
-
-      if (!marcaAvionExistente) {
-        const error = new Error(`Esa Marca de Avion no está registrada`);
-        return res.status(409).json({ error: error.message });
-      }
-
-      const modelo_avion = new ModeloAvion({ nombre, marca: marcaAvionID });
-
+      const modelo_avion = new ModeloAvion({ nombre, marca: req.marca_avion._id });
       await modelo_avion.save();
 
       res.status(201).json({ message: "Modelo de Avion creada exitosamente" });
@@ -39,15 +29,8 @@ export class ModeloAvionController {
   };
 
   static getByID = async (req: Request, res: Response) => {
-    const { modeloAvionID } = req.params;
     try {
-      const modelo_avion = await ModeloAvion.findById(modeloAvionID);
-
-      if (!modelo_avion) {
-        const error = new Error(`Modelo de Avion con ID ${modelo_avion} no encontrada`);
-        return res.status(404).json({ error: error.message });
-      }
-      res.status(201).json({ data: modelo_avion });
+      res.status(201).json({ data: req.modelo_avion });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al listar Modelo de Avion" });
@@ -55,17 +38,8 @@ export class ModeloAvionController {
   };
 
   static updateByID = async (req: Request, res: Response) => {
-    const { modeloAvionID } = req.params;
-
     try {
-      const modelo_avion = await ModeloAvion.findById(modeloAvionID);
-
-      if (!modelo_avion) {
-        const error = new Error(`Modelo de Avion con ID ${modeloAvionID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-
-      await ModeloAvion.findByIdAndUpdate(modeloAvionID, req.body, { new: true });
+      await ModeloAvion.findByIdAndUpdate(req.modelo_avion._id, req.body, { new: true });
 
       res.status(200).json({ message: "Modelo de Avion actualizado correctamente" });
     } catch (error) {
@@ -75,21 +49,13 @@ export class ModeloAvionController {
   };
 
   static deleteByID = async (req: Request, res: Response) => {
-    const { modeloAvionID } = req.params;
     try {
-      const modelo_avion = await ModeloAvion.findById(modeloAvionID);
-
-      if (!modelo_avion) {
-        const error = new Error(`Modelo de Avion con ID ${modeloAvionID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-
-      modelo_avion.activo = !modelo_avion.activo;
-      await modelo_avion.save();
+      req.modelo_avion.activo = !req.modelo_avion.activo;
+      await req.modelo_avion.save();
 
       res
         .status(201)
-        .json({ message: `Modelo de Avion ${modelo_avion.nombre} ${modelo_avion.activo ? "habilitado" : "deshabilitado"} exitosamente` });
+        .json({ message: `Modelo de Avion ${req.modelo_avion.nombre} ${req.modelo_avion.activo ? "habilitado" : "deshabilitado"} exitosamente` });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al cambiar de estado" });
