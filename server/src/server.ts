@@ -23,10 +23,12 @@ import usuarioRoutes from "./routes/usuarioRoutes";
 import clubRoutes from "./routes/clubRoutes";
 import licenciaRoutes from "./routes/licenciaRoutes";
 import marcaAvionRoutes from "./routes/marcaAvionRoutes";
+import aeronaveRoutes from "./routes/aeronaveRoutes";
 
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/clubs", clubRoutes);
 app.use("/api/licencias", licenciaRoutes);
 app.use("/api/marcas-aviones", marcaAvionRoutes);
+app.use("/api/aeronaves", aeronaveRoutes);
 
 export default app;
