@@ -8,8 +8,6 @@ export interface IUsuario extends Document {
   fechaNacimiento?: Date;
   telefono?: string;
   dni: number;
-  numeroLicencia?: string;
-  tipoLiencia?: string;
   activo: boolean;
 }
 
@@ -22,8 +20,6 @@ const UsuarioSchema: Schema = new Schema<IUsuario>(
     fechaNacimiento: { type: Date },
     telefono: { type: String },
     dni: { type: Number, required: true, unique: true },
-    numeroLicencia: { type: String },
-    tipoLiencia: { type: String },
     activo: { type: Boolean, default: true },
   },
   {

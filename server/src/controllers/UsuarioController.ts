@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import Usuario from "../models/Usuario";
+import { hashPassword } from "../utils/HasPassword";
+import Membresia from "../models/Membresia";
 
 export class UsuarioController {
   static getAll = async (req: Request, res: Response) => {
     try {
       const usuarios = await Usuario.find({});
-      res.status(201).json({
+      res.status(200).json({
         data: usuarios,
-        message: "Listado de usuarios",
       });
     } catch (error) {
       console.error(error.message);
@@ -16,21 +17,24 @@ export class UsuarioController {
   };
 
   static create = async (req: Request, res: Response) => {
-    const { email, password, nombre, apellido, telefono, dni, fechaNacimiento, numeroLicencia, tipoLiencia } = req.body;
-
     try {
-      const usuarioExistente = await Usuario.findOne({ where: { email } });
+      const { clubID } = req.params;
+      const { email, nombre, apellido, telefono, dni, fechaNacimiento } = req.body;
+
+      const usuarioExistente = await Usuario.findOne({ email });
 
       if (usuarioExistente) {
         const error = new Error(`Ese email ya está registrado`);
         return res.status(409).json({ error: error.message });
       }
 
-      const usuario = new Usuario({ email, password, nombre, apellido, telefono, dni, fechaNacimiento, numeroLicencia, tipoLiencia });
+      const usuario = new Usuario({ email, nombre, apellido, telefono, dni, fechaNacimiento });
+      usuario.password = await hashPassword(String(dni));
 
-      await usuario.save();
+      const membresia = new Membresia({ usuario: usuario._id, club: clubID, rolesEnClub: ["miembro"] });
+      Promise.allSettled([usuario.save(), membresia.save()]);
 
-      res.status(201).json({ message: "Usuario creado exitosamente" });
+      res.status(200).json({ message: "Usuario creado exitosamente" });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al crear el usuario" });
@@ -38,15 +42,8 @@ export class UsuarioController {
   };
 
   static getByID = async (req: Request, res: Response) => {
-    const { usuarioID } = req.params;
     try {
-      const usuario = await Usuario.findById(usuarioID);
-
-      if (!usuario) {
-        const error = new Error(`Usuario no ID ${usuarioID} no encontrado`);
-        return res.status(404).json({ error: error.message });
-      }
-      res.status(201).json({ data: usuario });
+      res.status(200).json({ data: req.usuario });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al listar usuario" });
@@ -60,9 +57,8 @@ export class UsuarioController {
     try {
       const updateData: any = { ...rest };
 
-      // TODO: Implementacion HASH de password
       if (password) {
-        updateData.password = password;
+        updateData.password = await hashPassword(password);
       }
 
       const updatedUser = await Usuario.findByIdAndUpdate(usuarioID, updateData, { new: true });
@@ -79,21 +75,28 @@ export class UsuarioController {
   };
 
   static deleteByID = async (req: Request, res: Response) => {
-    const { usuarioID } = req.params;
     try {
-      const usuario = await Usuario.findById(usuarioID);
+      req.usuario.activo = !req.usuario.activo;
 
-      if (!usuario) {
-        const error = new Error(`Usuario no ID ${usuarioID} no encontrado`);
-        return res.status(404).json({ error: error.message });
+      console.log(req.usuario.activo);
+      console.log(req.usuario);
+
+      const membresia = await Membresia.findOne({ usuario: req.usuario._id });
+
+      if (!req.usuario.activo) {
+        membresia.activo = false;
+        await membresia.save();
       }
 
-      usuario.activo = !usuario.activo;
-      await usuario.save();
+      if (req.usuario.activo) {
+        membresia.activo = true;
+        await membresia.save();
+      }
 
-      res
-        .status(201)
-        .json({ message: `Usuario ${usuario.apellido}, ${usuario.nombre} ${usuario.activo ? "habilitado" : "deshabilitado"} exitosamente` });
+      await req.usuario.save();
+      res.status(200).json({
+        message: `Usuario ${req.usuario.apellido}, ${req.usuario.nombre} ${req.usuario.activo ? "habilitado" : "deshabilitado"} exitosamente`,
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al desactivar" });
