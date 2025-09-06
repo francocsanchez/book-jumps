@@ -30,6 +30,7 @@ router.get(
   handleInputErrors,
   ModeloAvionController.getAll
 );
+
 router.post(
   "/:marcaAvionID/modelos",
   body("nombre").notEmpty().withMessage(`El nombre es obligatorio`),
@@ -38,7 +39,7 @@ router.post(
   ModeloAvionController.create
 );
 router.get(
-  "/:marcaAvionID/:modeloAvionID",
+  "/:marcaAvionID/:modeloAvionID/modelo",
   param("marcaAvionID").isMongoId().withMessage(`No es un ID válido`),
   param("modeloAvionID").isMongoId().withMessage(`No es un ID válido`),
   handleInputErrors,

@@ -1,4 +1,4 @@
-import { UsersRound, ChevronRight, ChevronDown, Settings } from "lucide-react";
+import { UsersRound, ChevronRight, ChevronDown, Settings, AreaChartIcon, Plane, Boxes, CreditCard } from "lucide-react";
 import NavLinkItem from "./NavLinkItem";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -35,14 +35,16 @@ export default function Menu() {
         {openConfig && (
           <div id="config-submenu" className="ml-8 mt-1 space-y-1">
             <NavLink
-              to="/config/marca-avion"
+              to="/config/aeronaves"
               className={({ isActive }) =>
                 `block px-3 py-1.5 rounded-lg text-sm transition ${
                   isActive ? "bg-sky-100 text-sky-700 font-medium" : "hover:bg-gray-50 text-gray-700"
                 }`
               }
             >
-              Aviónes
+              <div className="flex items-center gap-1">
+                <Plane className="h-4" /> Aviónes
+              </div>
             </NavLink>
             <NavLink
               to="/config/modelo-avion"
@@ -52,7 +54,9 @@ export default function Menu() {
                 }`
               }
             >
-              Clubes
+              <div className="flex items-center gap-1">
+                <Boxes className="h-4" /> Clubes
+              </div>
             </NavLink>
             <NavLink
               to="/config/licencias"
@@ -62,7 +66,9 @@ export default function Menu() {
                 }`
               }
             >
-              Licencias
+              <div className="flex items-center gap-1">
+                <CreditCard className="h-4" /> Licencias
+              </div>
             </NavLink>
           </div>
         )}

@@ -4,7 +4,8 @@ import ModeloAvion from "../models/ModeloAvion";
 export class ModeloAvionController {
   static getAll = async (req: Request, res: Response) => {
     try {
-      const modelos_aviones = await ModeloAvion.find({});
+      const { marcaAvionID } = req.params;
+      const modelos_aviones = await ModeloAvion.find({ marca: marcaAvionID });
       res.status(201).json({
         data: modelos_aviones,
       });
