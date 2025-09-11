@@ -14,7 +14,7 @@ export default function Menu() {
   }, [isConfigActive]);
   return (
     <nav className="p-4 space-y-2">
-      <NavLinkItem to="/atenciones" icon={<UsersRound />} label="Socios" />
+      <NavLinkItem to="/socios" icon={<UsersRound />} label="Socios" />
 
       {/* Configuraciones */}
       <div>
@@ -47,7 +47,7 @@ export default function Menu() {
               </div>
             </NavLink>
             <NavLink
-              to="/config/modelo-avion"
+              to="/config/clubs"
               className={({ isActive }) =>
                 `block px-3 py-1.5 rounded-lg text-sm transition ${
                   isActive ? "bg-sky-100 text-sky-700 font-medium" : "hover:bg-gray-50 text-gray-700"

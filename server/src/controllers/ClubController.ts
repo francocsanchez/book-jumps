@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Club from "../models/Club";
-import { Types } from "mongoose";
 
 export class ClubController {
   static getAll = async (req: Request, res: Response) => {
@@ -17,17 +16,17 @@ export class ClubController {
   };
 
   static create = async (req: Request, res: Response) => {
-    const { nombre, direccion, imagen } = req.body;
+    const { cuit } = req.body;
 
     try {
-      const clubExistente = await Club.findOne({ where: { nombre } });
+      const clubExistente = await Club.findOne({ cuit });
 
       if (clubExistente) {
         const error = new Error(`Ese club ya está registrado`);
         return res.status(409).json({ error: error.message });
       }
 
-      const club = new Club({ nombre, direccion, imagen });
+      const club = new Club(req.body);
       await club.save();
 
       res.status(201).json({ message: "Club creado exitosamente" });
@@ -37,9 +36,11 @@ export class ClubController {
     }
   };
 
-  static getByID = async (req: Request, res: Response) => {
+  static getClub = async (req: Request, res: Response) => {
     try {
-      res.status(201).json({ data: req.club });
+      const club = await Club.findOne();
+
+      res.status(200).json({ data: club });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al listar club" });
@@ -54,40 +55,6 @@ export class ClubController {
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Error al actualizar el club" });
-    }
-  };
-
-  static deleteByID = async (req: Request, res: Response) => {
-    try {
-      req.club.activo = !req.club.activo;
-      await req.club.save();
-
-      res.status(201).json({ message: `Club ${req.club.nombre} ${req.club.activo ? "habilitado" : "deshabilitado"} exitosamente` });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: "Error al cambiar de estado" });
-    }
-  };
-
-  static addAeronaveToClub = async (req: Request, res: Response) => {
-    try {
-      await Club.findByIdAndUpdate(req.club._id, { $addToSet: { aeronaves: req.aeronave._id } }, { new: true });
-
-      res.status(201).json({ message: "Aeronave agregada exitosamente" });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: "Error al agregar una aeronave al club" });
-    }
-  };
-
-  static removeAeronaveToClub = async (req: Request, res: Response) => {
-    try {
-      await Club.findByIdAndUpdate(req.club._id, { $pull: { aeronaves: req.aeronave._id } }, { new: true });
-
-      res.status(201).json({ message: "Aeronave eliminada exitosamente" });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: "Error al eliminar una aeronave al club" });
     }
   };
 }

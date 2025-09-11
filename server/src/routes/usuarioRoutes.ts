@@ -5,11 +5,10 @@ import { validateUsuario } from "../middleware/usuario";
 
 const router = Router();
 router.param("usuarioID", validateUsuario);
-router.param("clubID", validateClub);
 
 // ------------------- Rutas CRUD usuario
 router.get("/", UsuarioController.getAll);
-router.post("/:clubID", UsuarioController.create);
+router.post("/", UsuarioController.create);
 router.get("/:usuarioID", UsuarioController.getByID);
 router.put("/:usuarioID", UsuarioController.updateByID);
 router.delete("/:usuarioID", UsuarioController.deleteByID);

@@ -11,7 +11,7 @@ export default function AppLayout() {
           <div>
             <div className="h-16 flex items-center justify-center border-b">
               <div className="w-48">
-                <h1 className="font-bold text-lg">ParacaSYS</h1>
+                <h1 className="font-bold text-lg uppercase">Si.Ge.Pa</h1>
               </div>
             </div>
 
@@ -28,8 +28,8 @@ export default function AppLayout() {
           <div className="flex-1 p-6 overflow-y-auto">
             <Outlet />
           </div>
-          <footer className="border-t text-sm text-gray-500 px-6 py-3 bg-white text-center">
-            © {new Date().getFullYear()} ParacaSYS. Todos los derechos reservados.
+          <footer className="text-center text-xs text-slate-400 py-3">
+            © {new Date().getFullYear()} Club de Paracaidismo y Rescate del Neuquén — Si.Ge.Pa.
           </footer>
         </main>
       </div>

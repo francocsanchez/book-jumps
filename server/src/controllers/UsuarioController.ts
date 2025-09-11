@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Usuario from "../models/Usuario";
-import { hashPassword } from "../utils/HasPassword";
-import Membresia from "../models/Membresia";
+import { hashPassword } from "../utils/hasPassword";
 
 export class UsuarioController {
   static getAll = async (req: Request, res: Response) => {
@@ -18,21 +17,25 @@ export class UsuarioController {
 
   static create = async (req: Request, res: Response) => {
     try {
-      const { clubID } = req.params;
-      const { email, nombre, apellido, telefono, dni, fechaNacimiento } = req.body;
+      const { email, dni } = req.body;
 
-      const usuarioExistente = await Usuario.findOne({ email });
+      let usuarioExistente = await Usuario.findOne({ email });
 
       if (usuarioExistente) {
         const error = new Error(`Ese email ya está registrado`);
         return res.status(409).json({ error: error.message });
       }
 
-      const usuario = new Usuario({ email, nombre, apellido, telefono, dni, fechaNacimiento });
-      usuario.password = await hashPassword(String(dni));
+      usuarioExistente = await Usuario.findOne({ dni });
 
-      const membresia = new Membresia({ usuario: usuario._id, club: clubID, rolesEnClub: ["miembro"] });
-      Promise.allSettled([usuario.save(), membresia.save()]);
+      if (usuarioExistente) {
+        const error = new Error(`Ese DNI ya está registrado`);
+        return res.status(409).json({ error: error.message });
+      }
+
+      const usuario = new Usuario(req.body);
+      usuario.password = await hashPassword(String(req.body.dni));
+      await usuario.save();
 
       res.status(200).json({ message: "Usuario creado exitosamente" });
     } catch (error) {
@@ -52,16 +55,9 @@ export class UsuarioController {
 
   static updateByID = async (req: Request, res: Response) => {
     const { usuarioID } = req.params;
-    const { password, ...rest } = req.body;
 
     try {
-      const updateData: any = { ...rest };
-
-      if (password) {
-        updateData.password = await hashPassword(password);
-      }
-
-      const updatedUser = await Usuario.findByIdAndUpdate(usuarioID, updateData, { new: true });
+      const updatedUser = await Usuario.findByIdAndUpdate(usuarioID, req.body, { new: true });
       if (!updatedUser) {
         res.status(404).json({ message: "Usuario no encontrado" });
         return;
@@ -77,22 +73,6 @@ export class UsuarioController {
   static deleteByID = async (req: Request, res: Response) => {
     try {
       req.usuario.activo = !req.usuario.activo;
-
-      console.log(req.usuario.activo);
-      console.log(req.usuario);
-
-      const membresia = await Membresia.findOne({ usuario: req.usuario._id });
-
-      if (!req.usuario.activo) {
-        membresia.activo = false;
-        await membresia.save();
-      }
-
-      if (req.usuario.activo) {
-        membresia.activo = true;
-        await membresia.save();
-      }
-
       await req.usuario.save();
       res.status(200).json({
         message: `Usuario ${req.usuario.apellido}, ${req.usuario.nombre} ${req.usuario.activo ? "habilitado" : "deshabilitado"} exitosamente`,
