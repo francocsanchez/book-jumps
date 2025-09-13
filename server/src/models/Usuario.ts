@@ -8,9 +8,9 @@ export interface IUsuario extends Document {
   password: string;
   nombre: string;
   apellido: string;
-  fechaNacimiento?: Date;
+  fechaNacimiento: Date;
   telefono?: string;
-  dni: number;
+  dni: string;
   activo: boolean;
   licencia?: string;
   licenciaCop?: string;
@@ -23,16 +23,15 @@ const UsuarioSchema: Schema = new Schema<IUsuario>(
     password: { type: String, required: true },
     nombre: { type: String, required: true },
     apellido: { type: String, required: true },
-    fechaNacimiento: { type: Date },
+    fechaNacimiento: { type: Date, required: true },
     telefono: { type: String },
-    dni: { type: Number, required: true, unique: true },
+    dni: { type: String, required: true, unique: true },
     activo: { type: Boolean, default: true },
     licencia: { type: String },
     licenciaCop: { type: String },
     tiposUsuario: {
       type: [String],
       enum: TIPOS_USUARIO,
-      default: [],
       required: true,
     },
   },

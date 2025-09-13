@@ -1,8 +1,24 @@
 import { Request, Response } from "express";
 import Usuario from "../models/Usuario";
-import { hashPassword } from "../utils/hasPassword";
+import Club from "../models/Club";
+import { hashPassword, monthKey } from "../utils";
+import Cuota from "../models/Cuota";
 
 export class UsuarioController {
+  //* ------------------- Rutas usuarios extras
+  static getAllActivos = async (req: Request, res: Response) => {
+    try {
+      const usuarios = await Usuario.find({ activo: true });
+      res.status(200).json({
+        data: usuarios,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al listar los usuarios activos" });
+    }
+  };
+
+  //* ------------------- Rutas CRUD usuario
   static getAll = async (req: Request, res: Response) => {
     try {
       const usuarios = await Usuario.find({});
@@ -33,10 +49,32 @@ export class UsuarioController {
         return res.status(409).json({ error: error.message });
       }
 
-      const usuario = new Usuario(req.body);
-      usuario.password = await hashPassword(String(req.body.dni));
-      await usuario.save();
+      const newUsuario = new Usuario(req.body);
+      newUsuario.password = await hashPassword(String(req.body.dni));
 
+      const esParaca = newUsuario.tiposUsuario.includes("paracaidista");
+
+      if (esParaca) {
+        const club = await Club.findOne({ activo: true }).select("valores.cuota").lean();
+        const importe = club?.valores?.cuota ?? 0;
+
+        const periodo = monthKey();
+
+        await Cuota.updateOne(
+          { usuario: newUsuario._id, periodo },
+          {
+            $setOnInsert: {
+              usuario: newUsuario._id,
+              periodo,
+              importe,
+              estado: "pendiente",
+            },
+          },
+          { upsert: true }
+        );
+      }
+
+      await newUsuario.save();
       res.status(200).json({ message: "Usuario creado exitosamente" });
     } catch (error) {
       console.error(error.message);

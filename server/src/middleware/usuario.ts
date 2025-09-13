@@ -13,7 +13,7 @@ export async function validateUsuario(req: Request, res: Response, next: NextFun
   try {
     const { usuarioID } = req.params;
 
-    const usuario = await Usuario.findById(usuarioID);
+    const usuario = await Usuario.findById(usuarioID).select("-password").lean();
 
     if (!usuario) {
       const error = new Error(`Usuario no ID ${usuarioID} no encontrado`);

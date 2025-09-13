@@ -1,5 +1,4 @@
-import { Schema, model, Document, Types, PopulatedDoc } from "mongoose";
-import { IAeronave } from "./Aeronave";
+import { Schema, model, Document } from "mongoose";
 
 export interface IClub extends Document {
   nombre: string;
@@ -19,32 +18,42 @@ export interface IClub extends Document {
     cuenta: string;
     alias: string;
   };
-  linkStatuto?: string;
 }
 
 const ClubSchema: Schema = new Schema<IClub>(
   {
-    nombre: { type: String, required: true, loadClass: true },
-    cuit: { type: String, required: true, unique: true },
-    direccion: { type: String, loadClass: true },
-    imagen: { type: String },
+    nombre: { type: String, required: true, trim: true },
+    cuit: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      match: [/^\d{11}$/, "CUIT inválido (debe tener 11 dígitos)"],
+    },
+    direccion: { type: String, trim: true },
+    imagen: { type: String, trim: true },
     activo: { type: Boolean, default: true },
     valores: {
-      cuota: { type: Number, default: 0 },
-      salto: { type: Number, default: 0 },
-      alquilerEquipo: { type: Number, default: 0 },
+      cuota: { type: Number, default: 0, min: 0 },
+      salto: { type: Number, default: 0, min: 0 },
+      alquilerEquipo: { type: Number, default: 0, min: 0 },
     },
     datosBancarios: {
-      titular: { type: String, default: "" },
-      banco: { type: String, default: "" },
-      cbu: { type: String, default: "" },
-      cuenta: { type: String, default: "" },
-      alias: { type: String, default: "" },
+      titular: { type: String, default: "", trim: true },
+      banco: { type: String, default: "", trim: true },
+      cbu: {
+        type: String,
+        default: "",
+        trim: true,
+        match: [/^\d{0}$|^\d{22}$/, "CBU inválido (debe tener 22 dígitos)"],
+      },
+      cuenta: { type: String, default: "", trim: true },
+      alias: { type: String, default: "", trim: true },
     },
-    linkStatuto: { type: String, default: "" },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
