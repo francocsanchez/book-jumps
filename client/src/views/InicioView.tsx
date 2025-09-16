@@ -1,11 +1,11 @@
-import { getClubs } from "@/api/ClubAPI";
+import { getInfoClub } from "@/api/ClubAPI";
 import Loading from "@/components/Loading";
 import { useQuery } from "@tanstack/react-query";
 
 export default function InicioView() {
   const { data: dataClub, isLoading: loadClub } = useQuery({
     queryKey: ["club"],
-    queryFn: getClubs,
+    queryFn: getInfoClub,
   });
 
   if (loadClub) return <Loading />;

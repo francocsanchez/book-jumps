@@ -49,7 +49,8 @@ export class ClubController {
 
   static updateByID = async (req: Request, res: Response) => {
     try {
-      await Club.findByIdAndUpdate(req.club._id, req.body, { new: true });
+      const club = await Club.findOne();
+      await Club.findByIdAndUpdate(club._id, req.body, { new: true });
 
       res.status(200).json({ message: "Club actualizado correctamente" });
     } catch (error) {

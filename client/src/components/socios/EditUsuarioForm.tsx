@@ -1,14 +1,14 @@
-import type { Socio, UsuarioFormData } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import UsuarioForm from "./UsuarioForm";
 import { updateUsuarioByID } from "@/api/SociosAPI";
+import type { Usuario, UsuarioFormData } from "@/types/TUsuario";
 
 type EditUsuarioFormProps = {
   data: UsuarioFormData;
-  usuarioID: Socio["_id"];
+  usuarioID: Usuario["_id"];
 };
 
 export default function EditUsuarioForm({ data, usuarioID }: EditUsuarioFormProps) {
@@ -32,7 +32,7 @@ export default function EditUsuarioForm({ data, usuarioID }: EditUsuarioFormProp
       toast.error(errors.message);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["socios"] });
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
       queryClient.invalidateQueries({ queryKey: ["editUsuario", usuarioID] });
       toast.success(data.message);
       navigate(-1);

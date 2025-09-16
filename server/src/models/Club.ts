@@ -18,6 +18,7 @@ export interface IClub extends Document {
     cuenta: string;
     alias: string;
   };
+  linkStatuto: string;
 }
 
 const ClubSchema: Schema = new Schema<IClub>(
@@ -50,6 +51,7 @@ const ClubSchema: Schema = new Schema<IClub>(
       cuenta: { type: String, default: "", trim: true },
       alias: { type: String, default: "", trim: true },
     },
+    linkStatuto: { type: String, trim: true },
   },
   {
     timestamps: true,

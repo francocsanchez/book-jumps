@@ -3,12 +3,26 @@ import Usuario from "../models/Usuario";
 import Cuota from "../models/Cuota";
 import Club from "../models/Club";
 import Pago from "../models/Pago";
+import path from "path";
 
 //* ------------------- Helpers
 const PERIODO_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/; // "YYYY-MM"
 
 export class CuotaController {
-  //* ------------------- Rutas usuarios extras
+  //* ------------------- Rutas cuotas extras
+  static listCuotas = async (req: Request, res: Response) => {
+    try {
+      const cuotas = await Cuota.find().select("_id periodo importe estado");
+
+      res.status(200).json({
+        data: cuotas,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al listar los usuarios activos" });
+    }
+  };
+
   static cuotasEstados = async (req: Request, res: Response) => {
     const { estados } = req.params;
 
@@ -156,6 +170,20 @@ export class CuotaController {
     } catch (error: any) {
       console.error(error?.message || error);
       return res.status(500).json({ message: "Error al actualizar la cuota" });
+    }
+  };
+
+  static listCuotasPorPeriodo = async (req: Request, res: Response) => {
+    const { anioMes } = req.params;
+    try {
+      const cuotas = await Cuota.find({ periodo: anioMes }).populate({ path: "usuario", select: "nombre apellido" });
+
+      res.status(200).json({
+        data: cuotas,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al listar los usuarios activos" });
     }
   };
 }

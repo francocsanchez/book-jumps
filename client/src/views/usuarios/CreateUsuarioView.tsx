@@ -1,6 +1,6 @@
 import { createUsuario } from "@/api/SociosAPI";
 import UsuarioForm from "@/components/socios/UsuarioForm";
-import type { UsuarioFormData } from "@/types";
+import type { UsuarioFormData } from "@/types/TUsuario";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -15,10 +15,10 @@ export default function CreateUsuarioView() {
     apellido: "",
     fechaNacimiento: "",
     telefono: "",
-    dni: 0,
+    dni: "",
     licencia: "",
     licenciaCop: "",
-    tiposUsuario: [],
+    tiposUsuario: ["paracaidista"],
   };
 
   const {

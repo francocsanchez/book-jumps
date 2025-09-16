@@ -1,4 +1,4 @@
-import type { UsuarioFormData } from "@/types";
+import type { UsuarioFormData } from "@/types/TUsuario";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 type UsuarioFormPropos = {
@@ -11,26 +11,6 @@ const ROLES = ["paracaidista", "piloto", "asistente", "admin"] as const;
 export default function UsuarioForm({ register, errors }: UsuarioFormPropos) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Email */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          className={`mt-1 w-full px-3 py-2 rounded-md text-sm border ${
-            errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-gray-300"
-          }`}
-          {...register("email", {
-            required: "El email es obligatorio",
-            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido" },
-          })}
-        />
-        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
-      </div>
-
       {/* Nombre */}
       <div>
         <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
@@ -63,6 +43,26 @@ export default function UsuarioForm({ register, errors }: UsuarioFormPropos) {
         {errors.apellido && <p className="mt-1 text-xs text-red-600">{errors.apellido.message}</p>}
       </div>
 
+      {/* Email */}
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          autoComplete="email"
+          className={`mt-1 w-full px-3 py-2 rounded-md text-sm border ${
+            errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-gray-300"
+          }`}
+          {...register("email", {
+            required: "El email es obligatorio",
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido" },
+          })}
+        />
+        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
+      </div>
+
       {/* DNI */}
       <div>
         <label htmlFor="dni" className="block text-sm font-medium text-gray-700">
@@ -93,7 +93,7 @@ export default function UsuarioForm({ register, errors }: UsuarioFormPropos) {
           id="fechaNacimiento"
           type="date"
           className="mt-1 w-full px-3 py-2 rounded-md text-sm border border-gray-300"
-          {...register("fechaNacimiento")}
+          {...register("fechaNacimiento", { required: "La fecha de nacimiento es obligatorio" })}
         />
         {errors.fechaNacimiento && <p className="mt-1 text-xs text-red-600">{String(errors.fechaNacimiento.message)}</p>}
       </div>

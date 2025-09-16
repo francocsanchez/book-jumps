@@ -2,7 +2,7 @@ import { changeStatusSocio, getSocios } from "@/api/SociosAPI";
 import EmpyRegistros from "@/components/EmpyRegistros";
 import Loading from "@/components/Loading";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye, Pencil, Plus, RefreshCcw, Trash } from "lucide-react";
+import { Book, Lock, LockOpen, Pencil, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -10,7 +10,7 @@ export default function ListUsuariosView() {
   const queryClient = useQueryClient();
 
   const { data: dataSocios, isLoading: loadSocios } = useQuery({
-    queryKey: ["socios"],
+    queryKey: ["usuarios"],
     queryFn: getSocios,
   });
 
@@ -18,7 +18,7 @@ export default function ListUsuariosView() {
     mutationFn: changeStatusSocio,
     onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["socios"] });
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -76,10 +76,13 @@ export default function ListUsuariosView() {
                             socio.activo ? "bg-green-100 text-green-700" : "bg-red-100 text-red-500"
                           }`}
                         >
-                          {socio.activo ? "Activo" : "Inactivo"}
+                          {socio.activo ? "Activo" : "Bloqueado"}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center space-x-6 flex justify-center">
+                        <Link to={`${socio._id}`} className="text-green-600 hover:text-green-800">
+                          <Book className="w-4 h-4" />
+                        </Link>
                         {socio.activo && (
                           <>
                             <Link to={`${socio._id}/editar`} className="text-blue-600 hover:text-blue-800">
@@ -91,7 +94,7 @@ export default function ListUsuariosView() {
                           onClick={() => mutate(socio._id)}
                           className={socio.activo ? "text-red-600 hover:text-red-800" : "text-amber-600 hover:text-amber-800"}
                         >
-                          {socio.activo ? <Trash className="w-4 h-4" /> : <RefreshCcw className="w-4 h-4" />}
+                          {socio.activo ? <Lock className="w-4 h-4" /> : <LockOpen className="w-4 h-4" />}
                         </button>
                       </td>
                     </tr>

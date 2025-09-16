@@ -18,6 +18,20 @@ export class UsuarioController {
     }
   };
 
+  static getUsuarioVIew = async (req: Request, res: Response) => {
+    try {
+      const cuotas = await Cuota.find({ usuario: req.usuario._id });
+
+      res.status(200).json({
+        usuario: req.usuario,
+        cuotas,
+      });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al listar los usuarios activos" });
+    }
+  };
+
   //* ------------------- Rutas CRUD usuario
   static getAll = async (req: Request, res: Response) => {
     try {
@@ -116,6 +130,7 @@ export class UsuarioController {
         message: `Usuario ${req.usuario.apellido}, ${req.usuario.nombre} ${req.usuario.activo ? "habilitado" : "deshabilitado"} exitosamente`,
       });
     } catch (error) {
+      console.log(error);
       console.error(error.message);
       res.status(500).json({ message: "Error al desactivar" });
     }

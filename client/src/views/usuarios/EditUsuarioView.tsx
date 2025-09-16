@@ -18,6 +18,6 @@ export default function EditUsuarioView() {
   });
 
   if (loadUsuario) return <Loading />;
-  if (errorUsuario) return <div>Error al cargar la licencia</div>;
+  if (errorUsuario) return <div>Error al cargar el usuario</div>;
   if (dataUsuario) return <EditUsuarioForm data={dataUsuario} usuarioID={usuarioID} />;
 }

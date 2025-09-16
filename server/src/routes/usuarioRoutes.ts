@@ -9,6 +9,7 @@ router.param("usuarioID", validateUsuario);
 
 //* ------------------- Rutas usuarios extras
 router.get("/activos", UsuarioController.getAllActivos);
+router.get("/:usuarioID/view", UsuarioController.getUsuarioVIew);
 
 //* ------------------- Rutas CRUD usuario
 router.get("/", UsuarioController.getAll);

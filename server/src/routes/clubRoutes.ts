@@ -11,11 +11,6 @@ router.param("clubID", validateClub);
 // ------------------- Rutas CRUD clubs
 router.post("/", [body("nombre").notEmpty().withMessage("El nombre del club es obligatorio")], handleInputErrors, ClubController.create);
 router.get("/", ClubController.getClub);
-router.put(
-  "/:clubID",
-  [param("clubID").isMongoId().withMessage(`No es un ID válido`), body("nombre").notEmpty().withMessage("El nombre del club es obligatorio")],
-  handleInputErrors,
-  ClubController.updateByID
-);
+router.put("/", ClubController.updateByID);
 
 export default router;

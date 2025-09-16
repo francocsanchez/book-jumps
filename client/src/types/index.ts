@@ -75,27 +75,3 @@ export const ClubSchema = z.object({
 export type Club = z.infer<typeof ClubSchema>;
 export const listClubSchema = z.array(ClubSchema);
 export type ClubFormData = Pick<Club, "nombre" | "direccion" | "imagen">;
-
-// ------------------- Types Usuarios
-export const TiposUsuarioEnum = z.enum(["paracaidista", "piloto", "asistente", "admin"]);
-
-export const UsuarioSchema = z.object({
-  _id: z.string().optional(),
-  email: z.string(),
-  nombre: z.string(),
-  apellido: z.string(),
-  fechaNacimiento: z.string().optional(),
-  telefono: z.string().optional(),
-  dni: z.number().int(),
-  activo: z.boolean().optional(),
-  licencia: z.string().optional(),
-  licenciaCop: z.string().optional(),
-  tiposUsuario: z.array(TiposUsuarioEnum).default([]),
-});
-
-export type Socio = z.infer<typeof UsuarioSchema>;
-export type UsuarioFormData = Pick<
-  Socio,
-  "email" | "nombre" | "apellido" | "fechaNacimiento" | "telefono" | "dni" | "licencia" | "licenciaCop" | "tiposUsuario"
->;
-export const listUsuarioSchema = z.array(UsuarioSchema);

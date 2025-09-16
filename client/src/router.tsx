@@ -13,15 +13,19 @@ import ListAeronavesView from "@/views/config/aeronaves/ListAeronavesView";
 import CreateAeronaveView from "@/views/config/aeronaves/CreateAeronaveView";
 import ModelosAeronavesView from "@/views/config/aeronaves/ModelosAeronavesView";
 
-// ------------------- Rutas clubs
-import ListClubsView from "@/views/config/clubs/ListClubsView";
-import CreateClubView from "@/views/config/clubs/CreateClubView";
-import AeronavesClubView from "@/views/config/clubs/AeronavesClubView";
-
 // ------------------- Rutas usuarios
 import ListUsuariosView from "@/views/usuarios/ListUsuariosView";
 import CreateUsuarioView from "@/views/usuarios/CreateUsuarioView";
 import EditUsuarioView from "@/views/usuarios/EditUsuarioView";
+import ViewUsuarioView from "@/views/usuarios/ViewUsuarioView";
+
+//* ------------------- Rutas club
+import ClubView from "@/views/admin/club/ClubView";
+import EditClubView from "@/views/admin/club/EditClubView";
+
+//* ------------------- Rutas cuotas
+import ListCuotasView from "@/views/admin/cuotas/ListCuotasView";
+import FilterCuotasView from "@/views/admin/cuotas/FilterCuotasView";
 
 export default function Router() {
   return (
@@ -30,8 +34,15 @@ export default function Router() {
         <Route element={<AppLayouts />}>
           <Route path="/" element={<InicioView />} />
 
+          <Route path="/admin/club" element={<ClubView />} />
+          <Route path="/admin/club/editar" element={<EditClubView />} />
+
+          <Route path="/admin/cuotas" element={<ListCuotasView />} />
+          <Route path="/admin/cuotas/:anioMes" element={<FilterCuotasView />} />
+
           <Route path="/socios" element={<ListUsuariosView />} />
           <Route path="/socios/crear" element={<CreateUsuarioView />} />
+          <Route path="/socios/:usuarioID" element={<ViewUsuarioView />} />
           <Route path="/socios/:usuarioID/editar" element={<EditUsuarioView />} />
 
           <Route path="/config/licencias" element={<ListLicenciasView />} />
@@ -41,10 +52,6 @@ export default function Router() {
           <Route path="/config/aeronaves" element={<ListAeronavesView />} />
           <Route path="/config/aeronaves/crear" element={<CreateAeronaveView />} />
           <Route path="/config/aeronaves/:marcaAvionID/modelos" element={<ModelosAeronavesView />} />
-
-          <Route path="/config/clubs" element={<ListClubsView />} />
-          <Route path="/config/clubs/crear" element={<CreateClubView />} />
-          <Route path="/config/clubs/:clubID/aeronaves" element={<AeronavesClubView />} />
         </Route>
       </Routes>
     </BrowserRouter>
