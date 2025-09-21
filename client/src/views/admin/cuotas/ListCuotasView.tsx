@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listCuotas } from "@/api/CuotasAPI";
 import Loading from "@/components/Loading";
 import { fmtMoney } from "@/helpers";
+import GenerateCuotasModal from "@/components/cuotas/GenerateCuotasModal";
 
 export default function ListCuotasView() {
   const { data: dataCuotas = [], isLoading: loadCuotas } = useQuery({
@@ -27,15 +28,14 @@ export default function ListCuotasView() {
     const pendientePct = cobrables ? (totalPendientes / cobrables) * 100 : 0;
 
     // 4) Agrupar por período (YYYY-MM)
-    const map: Record<string, { periodo: string; total: number; pagas: number; pendientes: number; exentas: number }> = {};
+    const map: Record<string, { periodo: string; total: number; pagas: number; pendientes: number }> = {};
     for (const c of dataCuotas) {
       const p = c.periodo;
-      map[p] ??= { periodo: p, total: 0, pagas: 0, pendientes: 0, exentas: 0 };
+      map[p] ??= { periodo: p, total: 0, pagas: 0, pendientes: 0 };
       const r = map[p];
       r.total++;
       if (c.estado === "pagada") r.pagas++;
       else if (c.estado === "pendiente") r.pendientes++;
-      else if (c.estado === "exenta") r.exentas++;
     }
 
     const porPeriodo = Object.values(map).sort((a, b) => b.periodo.localeCompare(a.periodo));
@@ -52,7 +52,7 @@ export default function ListCuotasView() {
           <h1 className="text-xl md:text-2xl font-bold text-gray-800">Listado de cuotas</h1>
           <div className="flex items-center gap-2">
             <Link
-              to={`crear`}
+              to={`?generateCuotas=true`}
               className="inline-flex items-center gap-2 bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-emerald-700 transition"
             >
               <HandCoins className="w-4 h-4" />
@@ -103,7 +103,6 @@ export default function ListCuotasView() {
                   <th className="text-center font-medium px-6 py-3">Total</th>
                   <th className="text-center font-medium px-6 py-3">Pagas</th>
                   <th className="text-center font-medium px-6 py-3">Pendientes</th>
-                  <th className="text-center font-medium px-6 py-3">Exentas</th>
                   <th className="text-center font-medium px-6 py-3">Acciones</th>
                 </tr>
               </thead>
@@ -114,7 +113,6 @@ export default function ListCuotasView() {
                     <td className="px-6 py-3 text-center">{row.total}</td>
                     <td className="px-6 py-3 text-emerald-700 text-center">{row.pagas}</td>
                     <td className="px-6 py-3 text-amber-700 text-center">{row.pendientes}</td>
-                    <td className="px-6 py-3 text-slate-700 text-center">{row.exentas}</td>
                     <td className="px-6 py-3 text-center">
                       <Link to={`./${row.periodo}`} className="text-sky-700 hover:text-sky-900 underline underline-offset-2">
                         Ver detalle
@@ -134,6 +132,7 @@ export default function ListCuotasView() {
             </table>
           </div>
         </div>
+        <GenerateCuotasModal />
       </div>
     );
 }

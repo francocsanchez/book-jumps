@@ -1,5 +1,6 @@
 import { listCuotasPorPeriodo } from "@/api/CuotasAPI";
 import Loading from "@/components/Loading";
+import RegistrarPago from "@/components/pagos/RegistrarPago";
 import { fmtDate, fmtMoney } from "@/helpers";
 import { useQuery } from "@tanstack/react-query";
 import { FileCheck } from "lucide-react";
@@ -63,7 +64,6 @@ export default function FilterCuotasView() {
                 <tr key={c._id} className="hover:bg-gray-50">
                   <td className="px-6 py-3">
                     <div className="font-medium text-gray-800">{c?.usuario ? `${c.usuario.nombre} ${c.usuario.apellido}` : "—"}</div>
-                    <div className="text-xs text-gray-500">{c.periodo}</div>
                   </td>
                   <td className="px-6 py-3 text-center">
                     <EstadoBadge estado={c.estado} />
@@ -72,7 +72,10 @@ export default function FilterCuotasView() {
                   <td className="px-6 py-3 text-right">{fmtMoney(c.importe)}</td>
                   <td className="px-6 py-3 text-center">
                     {c.estado === "pendiente" && (
-                      <Link to={`./${c._id}`} className="text-emerald-700 hover:text-emerald-900 flex items-center gap-2 justify-center">
+                      <Link
+                        to={`?generatePago=true&usuario=${c.usuario._id}&cuota=${c._id}`}
+                        className="text-emerald-700 hover:text-emerald-900 flex items-center gap-2 justify-center"
+                      >
                         <FileCheck className="h-4 w-4" />
                         Generar pago
                       </Link>
@@ -104,6 +107,7 @@ export default function FilterCuotasView() {
           </table>
         </div>
       </div>
+      <RegistrarPago />
     </div>
   );
 }

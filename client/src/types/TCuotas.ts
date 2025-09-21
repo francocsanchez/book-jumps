@@ -28,6 +28,11 @@ export const CuotasListUsueriosSchema = CuotasListSchema.extend({
   }),
 });
 
+export const CuotasGenerateFormData = CuotaSchema.pick({
+  periodo: true,
+});
+export type CuotaGenerateFormDataType = z.infer<typeof CuotasGenerateFormData>;
+
 export type Cuota = z.infer<typeof CuotaSchema>;
 export const listCuotasView = z.array(CuotasListSchema);
 export const listCuotasConUsuarioView = z.array(CuotasListUsueriosSchema);

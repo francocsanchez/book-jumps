@@ -55,7 +55,7 @@ type UpdateLicenciaParams = {
 export async function updateLicenciaByID({ formData, licenciaID }: UpdateLicenciaParams) {
   try {
     const { data } = await api.put(`/licencias/${licenciaID}`, formData);
-    console.log(data);
+
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

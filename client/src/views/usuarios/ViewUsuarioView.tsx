@@ -14,7 +14,6 @@ const ROLE_LABEL: Record<string, string> = {
 const ESTADO_CUOTA_DOT: Record<string, string> = {
   pendiente: "bg-amber-500",
   pagada: "bg-emerald-500",
-  exenta: "bg-slate-400",
 };
 
 export default function ViewUsuarioView() {
@@ -41,7 +40,6 @@ export default function ViewUsuarioView() {
   const cuotasOrdenadas = [...(cuotas ?? [])].sort((a, b) => (a.periodo < b.periodo ? 1 : -1));
   const totPend = cuotasOrdenadas.filter((c) => c.estado === "pendiente").length;
   const totPag = cuotasOrdenadas.filter((c) => c.estado === "pagada").length;
-  const totExe = cuotasOrdenadas.filter((c) => c.estado === "exenta").length;
   const deuda = cuotasOrdenadas.filter((c) => c.estado === "pendiente").reduce((acc, c) => acc + (c.importe || 0), 0);
 
   return (
@@ -118,7 +116,7 @@ export default function ViewUsuarioView() {
         {/* Resumen de cuotas */}
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
           <h2 className="text-base font-semibold text-slate-800">Resumen de cuotas</h2>
-          <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg border bg-slate-50 p-3 text-center">
               <div className="text-slate-500">Pendientes</div>
               <div className="text-xl font-bold">{totPend}</div>
@@ -126,10 +124,6 @@ export default function ViewUsuarioView() {
             <div className="rounded-lg border bg-slate-50 p-3 text-center">
               <div className="text-slate-500">Pagadas</div>
               <div className="text-xl font-bold">{totPag}</div>
-            </div>
-            <div className="rounded-lg border bg-slate-50 p-3 text-center">
-              <div className="text-slate-500">Exentas</div>
-              <div className="text-xl font-bold">{totExe}</div>
             </div>
           </div>
 

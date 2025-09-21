@@ -39,9 +39,9 @@ export class CuotaController {
   };
 
   static generarCuotas = async (req: Request, res: Response) => {
-    const { anioMes } = req.params;
+    const { periodo } = req.body;
     try {
-      if (!PERIODO_REGEX.test(anioMes)) {
+      if (!PERIODO_REGEX.test(periodo)) {
         const error = new Error(`Formato inválido. Usa "YYYY-MM", ej: 2025-09'`);
         return res.status(400).json({ error: error.message });
       }
@@ -63,17 +63,17 @@ export class CuotaController {
 
       if (!usuarios.length) {
         return res.status(200).json({
-          message: `No hay usuarios paracaidistas activos para ${anioMes}.`,
+          message: `No hay usuarios paracaidistas activos para ${periodo}.`,
         });
       }
 
       const ops = usuarios.map((u) => ({
         updateOne: {
-          filter: { usuario: u._id, periodo: anioMes },
+          filter: { usuario: u._id, periodo },
           update: {
             $setOnInsert: {
               usuario: u._id,
-              periodo: anioMes,
+              periodo,
               importe,
               estado: "pendiente",
             },
@@ -85,7 +85,7 @@ export class CuotaController {
       await Cuota.bulkWrite(ops, { ordered: false });
 
       res.status(200).json({
-        message: `Cuotas del perido ${anioMes} generadas exitosamente`,
+        message: `Cuotas del perido ${periodo} generadas exitosamente`,
       });
     } catch (error) {
       console.error(error.message);
@@ -102,6 +102,7 @@ export class CuotaController {
       }
 
       req.cuota.estado = "pagada";
+      req.cuota.fechaPago = fechaPago;
 
       const dataPago = {
         cuota: req.cuota._id,
@@ -109,11 +110,11 @@ export class CuotaController {
         periodo: req.cuota.periodo,
         importe: req.cuota.importe,
         fechaPago,
-        notas,
       };
 
       const newPago = new Pago(dataPago);
 
+      newPago.notas = notas;
       await newPago.save();
       await req.cuota.save();
 
@@ -133,6 +134,7 @@ export class CuotaController {
       }
 
       req.cuota.estado = "exenta";
+      req.cuota.fechaPago = fechaPago;
 
       const dataPago = {
         cuota: req.cuota._id,
@@ -177,7 +179,8 @@ export class CuotaController {
     const { anioMes } = req.params;
     try {
       const cuotas = await Cuota.find({ periodo: anioMes }).populate({ path: "usuario", select: "nombre apellido" });
-
+      const cuotas2 = await Cuota.find();
+      console.log(cuotas2);
       res.status(200).json({
         data: cuotas,
       });

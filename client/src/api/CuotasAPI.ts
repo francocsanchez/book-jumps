@@ -1,5 +1,5 @@
 import api from "@/libs/axios";
-import { listCuotasConUsuarioView, listCuotasView, type Cuota } from "@/types/TCuotas";
+import { listCuotasConUsuarioView, listCuotasView, type Cuota, type CuotaGenerateFormDataType } from "@/types/TCuotas";
 import { isAxiosError } from "axios";
 
 export async function listCuotas() {
@@ -23,10 +23,21 @@ export async function listCuotasPorPeriodo(periodo: Cuota["periodo"]) {
     const { data } = await api(`/cuotas/${periodo}/listar`);
     const response = listCuotasConUsuarioView.safeParse(data.data);
 
-    console.log(response);
     if (response.success) {
       return response.data;
     }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message || "Error listar cuotas");
+    }
+    throw error;
+  }
+}
+
+export async function generateCuotas(formData: CuotaGenerateFormDataType) {
+  try {
+    const { data } = await api.post(`/cuotas/generar`, formData);
+    return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.message || "Error listar cuotas");
