@@ -25,12 +25,14 @@ import licenciaRoutes from "./routes/licenciaRoutes";
 import marcaAvionRoutes from "./routes/marcaAvionRoutes";
 import aeronaveRoutes from "./routes/aeronaveRoutes";
 import cuotaRoutes from "./routes/cuotaRoutes";
+import pagoRoutes from "./routes/pagosRoutes";
 
 app.use("/api/marcas-aviones", marcaAvionRoutes);
 app.use("/api/licencias", licenciaRoutes);
 app.use("/api/aeronaves", aeronaveRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/clubs", clubRoutes);
+app.use("/api/pagos", pagoRoutes);
 app.use("/api/cuotas", cuotaRoutes);
 
 export default app;

@@ -16,4 +16,31 @@ const PagoGenerateFormData = PagoSchema.pick({
   notas: true,
 });
 
+const PagoListView = PagoSchema.pick({
+  _id: true,
+  periodo: true,
+  importe: true,
+  notas: true,
+  fechaPago: true,
+}).extend({
+  usuario: z.object({
+    _id: z.string(),
+    nombre: z.string(),
+    apellido: z.string(),
+  }),
+});
+
+const DataGraficoSchema = z.array(
+  z.object({
+    periodo: z.string(),
+    total: z.number(),
+  })
+);
+
+export const PagoListResponse = z.object({
+  pagos: z.array(PagoListView),
+  dataGrafico: DataGraficoSchema,
+});
+
 export type PagoGenerateFormData = z.infer<typeof PagoGenerateFormData>;
+export const PagoListViewArray = z.array(PagoListView);

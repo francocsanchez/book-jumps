@@ -27,12 +27,17 @@ import EditClubView from "@/views/admin/club/EditClubView";
 import ListCuotasView from "@/views/admin/cuotas/ListCuotasView";
 import FilterCuotasView from "@/views/admin/cuotas/FilterCuotasView";
 
+//* ------------------- Rutas pagos
+import ListPagosView from "./views/admin/pagos/ListPagosView";
+
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayouts />}>
           <Route path="/" element={<InicioView />} />
+
+          <Route path="/admin/pagos" element={<ListPagosView />} />
 
           <Route path="/admin/club" element={<ClubView />} />
           <Route path="/admin/club/editar" element={<EditClubView />} />
