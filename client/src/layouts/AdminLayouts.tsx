@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Menu from "@/components/layouts/Menu";
 import Logout from "@/components/layouts/Logout";
-export default function AppLayout() {
+export default function AdminLayouts() {
   return (
     <>
       <div className="flex h-screen bg-gray-50 text-gray-800">

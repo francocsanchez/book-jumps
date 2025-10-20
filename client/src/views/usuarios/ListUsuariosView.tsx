@@ -1,6 +1,7 @@
 import { changeStatusSocio, getSocios } from "@/api/SociosAPI";
 import EmpyRegistros from "@/components/EmpyRegistros";
 import Loading from "@/components/Loading";
+import { useAuth } from "@/hook/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Book, Lock, LockOpen, Pencil, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,7 +9,7 @@ import { toast } from "sonner";
 
 export default function ListUsuariosView() {
   const queryClient = useQueryClient();
-
+  const { userData } = useAuth();
   const { data: dataSocios, isLoading: loadSocios } = useQuery({
     queryKey: ["usuarios"],
     queryFn: getSocios,
@@ -26,6 +27,7 @@ export default function ListUsuariosView() {
   });
 
   if (loadSocios) return <Loading />;
+  console.log(userData);
   if (dataSocios)
     return (
       <div className="space-y-6">

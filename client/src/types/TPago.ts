@@ -30,16 +30,8 @@ const PagoListView = PagoSchema.pick({
   }),
 });
 
-const DataGraficoSchema = z.array(
-  z.object({
-    periodo: z.string(),
-    total: z.number(),
-  })
-);
-
 export const PagoListResponse = z.object({
   pagos: z.array(PagoListView),
-  dataGrafico: DataGraficoSchema,
 });
 
 export type PagoGenerateFormData = z.infer<typeof PagoGenerateFormData>;

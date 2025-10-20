@@ -25,9 +25,13 @@ import licenciaRoutes from "./routes/licenciaRoutes";
 import marcaAvionRoutes from "./routes/marcaAvionRoutes";
 import aeronaveRoutes from "./routes/aeronaveRoutes";
 import cuotaRoutes from "./routes/cuotaRoutes";
+import conceptoRoutes from "./routes/conceptoRoutes";
 import pagoRoutes from "./routes/pagosRoutes";
+import transaccionRoutes from "./routes/transaccionRoutes";
 
 app.use("/api/marcas-aviones", marcaAvionRoutes);
+app.use("/api/transacciones", transaccionRoutes);
+app.use("/api/conceptos", conceptoRoutes);
 app.use("/api/licencias", licenciaRoutes);
 app.use("/api/aeronaves", aeronaveRoutes);
 app.use("/api/usuarios", usuarioRoutes);

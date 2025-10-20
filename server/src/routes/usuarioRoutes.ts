@@ -3,9 +3,23 @@ import { UsuarioController } from "../controllers/UsuarioController";
 import { validateUsuario } from "../middleware/usuario";
 import { handleInputErrors } from "../middleware/validation";
 import { body } from "express-validator";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 router.param("usuarioID", validateUsuario);
+
+//* ------------------- Rutas usuarios login
+router.post(
+  "/login",
+  [
+    body("password").notEmpty().withMessage(`El password no puede estar vacío`),
+    body("email").isEmail().withMessage(`El email posee un formato inválido`),
+  ],
+  handleInputErrors,
+  UsuarioController.loginUser
+);
+
+router.get("/username", authenticate, UsuarioController.userData);
 
 //* ------------------- Rutas usuarios extras
 router.get("/activos", UsuarioController.getAllActivos);

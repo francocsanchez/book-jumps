@@ -3,7 +3,6 @@ import Usuario from "../models/Usuario";
 import Cuota from "../models/Cuota";
 import Club from "../models/Club";
 import Pago from "../models/Pago";
-import path from "path";
 
 //* ------------------- Helpers
 const PERIODO_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/; // "YYYY-MM"

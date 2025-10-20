@@ -1,10 +1,47 @@
 import { Request, Response } from "express";
 import Usuario from "../models/Usuario";
 import Club from "../models/Club";
-import { hashPassword, monthKey } from "../utils";
+import { checkPassword, generateJWT, hashPassword, monthKey } from "../utils";
 import Cuota from "../models/Cuota";
+import { Types } from "mongoose";
 
 export class UsuarioController {
+  //* ------------------- Rutas usuarios login
+  static loginUser = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+      const usuario = await Usuario.findOne({ email });
+      if (!usuario) {
+        res.status(404).json({ message: "Usuario no encontrado" });
+        return;
+      }
+
+      if (!usuario.activo) {
+        res.status(403).json({ message: "Usuario desactivado" });
+        return;
+      }
+
+      const isPasswordCorrect = await checkPassword(password, usuario.password);
+
+      if (!isPasswordCorrect) {
+        res.status(401).json({ message: "Password incorrecto" });
+        return;
+      }
+
+      const token = generateJWT({ id: usuario._id as Types.ObjectId });
+
+      res.status(200).send(token);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Error al crear el código" });
+    }
+  };
+
+  static userData = async (req: Request, res: Response): Promise<void> => {
+    res.json(req.usuario);
+    return;
+  };
+
   //* ------------------- Rutas usuarios extras
   static getAllActivos = async (req: Request, res: Response) => {
     try {

@@ -3,7 +3,6 @@ import EmpyRegistros from "@/components/EmpyRegistros";
 import Loading from "@/components/Loading";
 import { fmtDate, fmtMoney } from "@/helpers";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LabelList } from "recharts";
 
 export default function ListPagosView() {
   const {
@@ -19,7 +18,7 @@ export default function ListPagosView() {
   if (loadPagos) return <Loading />;
   if (!data) return <EmpyRegistros title={`No hay pagos registrados`} />;
 
-  const { pagos, dataGrafico } = data;
+  const { pagos } = data;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -27,31 +26,6 @@ export default function ListPagosView() {
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800">Listado de pagos</h1>
       </div>
-
-      {/* Gráfico */}
-      {dataGrafico.length > 0 && (
-        <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">Pagos por periodo</h2>
-          <div className="max-w-2xl mx-auto">
-            {" "}
-            {/* limita el ancho del gráfico */}
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart
-                data={dataGrafico}
-                margin={{ top: 30, right: 20, left: 0, bottom: 0 }} // espacio extra arriba
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="periodo" />
-                <YAxis hide />
-                <Tooltip />
-                <Bar dataKey="total" fill="#0ea5e9" radius={[10, 10, 0, 0]}>
-                  <LabelList dataKey="total" position="top" fill="#374151" fontSize={12} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      )}
 
       {/* Tabla */}
       {pagos.length ? (

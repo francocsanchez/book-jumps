@@ -1,4 +1,18 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { Types } from "mongoose";
+
+type Token = {
+  id: Types.ObjectId;
+};
+
+export const generateJWT = (payload: Token) => {
+  const token = jwt.sign(payload, process.env.JWT_TOKEN, {
+    expiresIn: "30d",
+  });
+
+  return token;
+};
 
 export async function hashPassword(password: string) {
   const salt = await bcrypt.genSalt(10);

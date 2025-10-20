@@ -1,4 +1,16 @@
-import { UsersRound, ChevronRight, ChevronDown, Settings, Plane, CreditCard, Command, CircleDollarSign, Landmark, MapPinHouse } from "lucide-react";
+import {
+  UsersRound,
+  ChevronRight,
+  ChevronDown,
+  Settings,
+  Plane,
+  CreditCard,
+  Command,
+  CircleDollarSign,
+  Landmark,
+  MapPinHouse,
+  ClipboardList,
+} from "lucide-react";
 import NavLinkItem from "./NavLinkItem";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -39,6 +51,30 @@ export default function Menu() {
 
         {openAdmin && (
           <div id="config-submenu" className="ml-8 mt-1 space-y-1">
+            <NavLink
+              to="/admin/movimientos"
+              className={({ isActive }) =>
+                `block px-3 py-1.5 rounded-lg text-sm transition ${
+                  isActive ? "bg-sky-100 text-sky-700 font-medium" : "hover:bg-gray-50 text-gray-700"
+                }`
+              }
+            >
+              <div className="flex items-center gap-1">
+                <ClipboardList className="h-4" /> Movimientos
+              </div>
+            </NavLink>
+            <NavLink
+              to="/admin/vuelos"
+              className={({ isActive }) =>
+                `block px-3 py-1.5 rounded-lg text-sm transition ${
+                  isActive ? "bg-sky-100 text-sky-700 font-medium" : "hover:bg-gray-50 text-gray-700"
+                }`
+              }
+            >
+              <div className="flex items-center gap-1">
+                <Plane className="h-4" /> Vuelos
+              </div>
+            </NavLink>
             <NavLink
               to="/admin/club"
               className={({ isActive }) =>
@@ -97,6 +133,18 @@ export default function Menu() {
 
         {openConfig && (
           <div id="config-submenu" className="ml-8 mt-1 space-y-1">
+            <NavLink
+              to="/config/aeronaves"
+              className={({ isActive }) =>
+                `block px-3 py-1.5 rounded-lg text-sm transition ${
+                  isActive ? "bg-sky-100 text-sky-700 font-medium" : "hover:bg-gray-50 text-gray-700"
+                }`
+              }
+            >
+              <div className="flex items-center gap-1">
+                <Plane className="h-4" /> Conceptos
+              </div>
+            </NavLink>
             <NavLink
               to="/config/aeronaves"
               className={({ isActive }) =>

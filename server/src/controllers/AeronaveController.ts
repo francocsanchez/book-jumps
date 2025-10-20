@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import Club from "../models/Club";
 import Aeronave from "../models/Aeronave";
 
 export class AeronaveController {
@@ -16,7 +15,7 @@ export class AeronaveController {
   };
 
   static create = async (req: Request, res: Response) => {
-    const { matricula, modeloID, anoFabricacion } = req.body;
+    const { matricula, modeloID, anoFabricacion, clubID } = req.body;
 
     try {
       const aeronaveExistente = await Aeronave.findOne({ where: { matricula } });

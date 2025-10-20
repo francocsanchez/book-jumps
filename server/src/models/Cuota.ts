@@ -9,7 +9,6 @@ export interface ICuota extends Document {
   importe: number;
   estado: EstadoCuota;
   fechaPago?: string;
-  notas?: string;
 }
 
 const CuotaSchema: Schema = new Schema<ICuota>(
@@ -26,7 +25,6 @@ const CuotaSchema: Schema = new Schema<ICuota>(
     importe: { type: Number, required: true, min: 0 },
     estado: { type: String, enum: ESTADO_CUOTA, default: "pendiente", index: true },
     fechaPago: { type: String },
-    notas: { type: String, trim: true },
   },
   {
     timestamps: true,

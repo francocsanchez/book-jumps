@@ -15,6 +15,7 @@ export const UsuarioSchema = z.object({
   licencia: z.string().optional(),
   licenciaCop: z.string().optional(),
   tiposUsuario: z.array(TiposUsuarioEnum).default([]),
+  password: z.string(),
 });
 
 // ------------------- ListUsuariosView
@@ -54,3 +55,7 @@ export const UsuarioView = z.object({
   usuario: UsuarioSchema,
   cuotas: z.array(CuotaLiteSchema),
 });
+
+//* ------------------- LoginUsuario
+export type UsuarioLoginForm = Pick<Usuario, "email" | "password">;
+export type UsuarioChangePassword = Pick<Usuario, "password">;

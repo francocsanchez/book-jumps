@@ -2,19 +2,6 @@ import { Request, Response } from "express";
 import Club from "../models/Club";
 
 export class ClubController {
-  static getAll = async (req: Request, res: Response) => {
-    try {
-      const clubs = await Club.find({});
-
-      res.status(201).json({
-        data: clubs,
-      });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: "Error al listar los club" });
-    }
-  };
-
   static create = async (req: Request, res: Response) => {
     const { cuit } = req.body;
 

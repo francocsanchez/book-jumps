@@ -9,7 +9,6 @@ export const CuotaSchema = z.object({
   importe: z.number(),
   estado: EstadoCuotaEnum,
   fechaPago: z.string().optional(),
-  notas: z.string().optional(),
 });
 
 export const CuotasListSchema = CuotaSchema.pick({

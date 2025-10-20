@@ -1,7 +1,19 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { UserCircle, LogOut } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function Logout() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    localStorage.removeItem("AUTH_TOKEN");
+    navigate("/", { replace: true });
+    queryClient.clear();
+    toast.success("Hasta luego!");
+  };
+
   return (
     <div className="p-4 border-t space-y-2">
       <NavLink
@@ -16,7 +28,7 @@ export default function Logout() {
         Mi perfil
       </NavLink>
 
-      <button onClick={() => console.log(``)} className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+      <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition">
         <LogOut className="w-5 h-5 mr-3" />
         Cerrar sesión
       </button>

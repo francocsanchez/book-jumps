@@ -1,6 +1,7 @@
 import { getUsuarioByIDWithCuotas } from "@/api/SociosAPI"; // devuelve { usuario, cuotas }
 import Loading from "@/components/Loading";
 import { fmtDate, fmtMoney, getEdad } from "@/helpers";
+import { useAuth } from "@/hook/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -41,7 +42,6 @@ export default function ViewUsuarioView() {
   const totPend = cuotasOrdenadas.filter((c) => c.estado === "pendiente").length;
   const totPag = cuotasOrdenadas.filter((c) => c.estado === "pagada").length;
   const deuda = cuotasOrdenadas.filter((c) => c.estado === "pendiente").reduce((acc, c) => acc + (c.importe || 0), 0);
-
   return (
     <div className="space-y-6">
       {/* Encabezado */}
@@ -151,7 +151,6 @@ export default function ViewUsuarioView() {
                   <th className="px-6 py-3 text-left font-medium text-slate-600">Estado</th>
                   <th className="px-6 py-3 text-right font-medium text-slate-600">Importe</th>
                   <th className="px-6 py-3 text-left font-medium text-slate-600">Fecha pago</th>
-                  <th className="px-6 py-3 text-left font-medium text-slate-600">Anotaciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -166,7 +165,6 @@ export default function ViewUsuarioView() {
                     </td>
                     <td className="px-6 py-3 text-right font-medium">{fmtMoney(c.importe)}</td>
                     <td className="px-6 py-3">{c.fechaPago ? fmtDate(c.fechaPago) : "—"}</td>
-                    <td className="px-6 py-3">{c.notas ? c.notas : "—"}</td>
                   </tr>
                 ))}
               </tbody>
